@@ -17,3 +17,23 @@ def validate_amount(amount):
 
     return False
 
+from datetime import datetime
+
+def validate_date(date_str):
+
+    try:
+        valid_date = datetime.strptime(date_str, "%d/%m/%Y").date()
+
+        #Convert user input into a Python date object
+
+        today = datetime.today().date()
+
+        #Current date
+
+        if valid_date > today:
+            return False
+
+        return True
+
+    except ValueError:
+        return False

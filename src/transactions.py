@@ -51,3 +51,15 @@ def validate_category(category):
         return True
     
     return False
+
+
+
+def validate_type(transaction_type):
+
+    if isinstance(transaction_type, str):
+        transaction_type = transaction_type.strip().lower()
+
+        if transaction_type in ("income", "expense"):
+            return True
+
+    return False

@@ -1,5 +1,10 @@
 from datetime import datetime
-from src.transactions import validate_amount, validate_date, validate_category
+from src.transactions import (
+    validate_amount,
+    validate_date,
+    validate_category,
+    validate_type,
+)
 
 
 def test_valid_amount():
@@ -43,3 +48,23 @@ def test_invalid_category():
     assert validate_category("   ") is False
     assert validate_category(None) is False
     assert validate_category(250) is False
+
+
+
+
+
+
+def test_valid_type():
+    assert validate_type("income") is True
+    assert validate_type("expense") is True
+    assert validate_type("INCOME") is True
+    assert validate_type(" Expense ") is True
+
+
+def test_invalid_type():
+    assert validate_type("") is False
+    assert validate_type("   ") is False
+    assert validate_type("salary") is False
+    assert validate_type("profit") is False
+    assert validate_type(None) is False
+    assert validate_type(250) is False

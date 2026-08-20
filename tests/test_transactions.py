@@ -5,6 +5,7 @@ from src.transactions import (
     validate_category,
     validate_type,
     validate_description,
+    create_transaction,
 )
 
 
@@ -85,3 +86,35 @@ def test_invalid_description():
 
     long_description = "word " * 101
     assert validate_description(long_description) is False
+
+
+
+
+def test_create_transaction():
+    transaction = create_transaction(
+        250,
+        "17/08/2026",
+        " Food ",
+        " EXPENSE ",
+        " Dinner "
+    )
+
+    assert transaction == {
+        "amount": 250,
+        "date": "2026-08-17",
+        "category": "Food",
+        "type": "expense",
+        "description": "Dinner"
+    }
+
+import pytest
+
+def test_create_transaction_invalid_amount():
+    with pytest.raises(ValueError):
+        create_transaction(
+            -250,
+            "17/08/2026",
+            "Food",
+            "expense",
+            "Dinner"
+        )

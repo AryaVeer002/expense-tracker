@@ -37,3 +37,17 @@ def validate_date(date_str):
 
     except ValueError:
         return False
+
+
+
+def validate_category(category):
+
+    if isinstance(category, str):
+        category = category.strip()
+        
+        if category == "":
+            return False
+        
+        return True
+    
+    return False

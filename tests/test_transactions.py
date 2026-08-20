@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.transactions import validate_amount, validate_date
+from src.transactions import validate_amount, validate_date, validate_category
 
 
 def test_valid_amount():
@@ -25,7 +25,21 @@ def test_today_date():
     assert validate_date(today) is True
 
 def test_invalid_date():
-    assert validate_date("20/08/2026") is False
+    assert validate_date("30/08/2026") is False
     assert validate_date("31/02/2026") is False
     assert validate_date("hello") is False
     assert validate_date("19-08-2026") is False
+
+
+
+def test_valid_category():
+    assert validate_category("Food") is True
+    assert validate_category("Gaming") is True
+    assert validate_category("My Hobby") is True
+
+
+def test_invalid_category():
+    assert validate_category("") is False
+    assert validate_category("   ") is False
+    assert validate_category(None) is False
+    assert validate_category(250) is False

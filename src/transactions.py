@@ -63,3 +63,22 @@ def validate_type(transaction_type):
             return True
 
     return False
+
+
+
+def validate_description(description):
+
+    if isinstance(description, str):
+        description = description.strip()
+
+        if description == "":
+            return True
+
+        word_count = len(description.split())
+
+        if word_count > 100:
+            return False
+
+        return True
+
+    return False

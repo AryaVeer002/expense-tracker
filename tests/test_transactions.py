@@ -4,6 +4,7 @@ from src.transactions import (
     validate_date,
     validate_category,
     validate_type,
+    validate_description,
 )
 
 
@@ -68,3 +69,19 @@ def test_invalid_type():
     assert validate_type("profit") is False
     assert validate_type(None) is False
     assert validate_type(250) is False
+
+
+
+def test_valid_description():
+    assert validate_description("Dinner") is True
+    assert validate_description("Bought a new keyboard") is True
+    assert validate_description("") is True
+    assert validate_description("   ") is True
+
+
+def test_invalid_description():
+    assert validate_description(None) is False
+    assert validate_description(250) is False
+
+    long_description = "word " * 101
+    assert validate_description(long_description) is False

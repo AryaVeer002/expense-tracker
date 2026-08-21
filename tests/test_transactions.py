@@ -6,6 +6,7 @@ from src.transactions import (
     validate_type,
     validate_description,
     create_transaction,
+    add_transaction,
 )
 
 
@@ -118,3 +119,26 @@ def test_create_transaction_invalid_amount():
             "expense",
             "Dinner"
         )
+
+
+def test_add_transaction():
+    transactions = []
+
+    transaction = create_transaction(
+        250,
+        "17/08/2026",
+        "Food",
+        "expense",
+        "Dinner"
+    )
+
+    add_transaction(transactions, transaction)
+
+    assert len(transactions) == 1
+    assert transactions[0] == transaction
+
+def test_add_transaction_wrong_type():
+    transactions = []
+
+    with pytest.raises(TypeError):
+        add_transaction(transactions, 250)

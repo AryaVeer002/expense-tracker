@@ -113,3 +113,9 @@ def create_transaction(amount, date_str, category, transaction_type, description
 
 
 
+
+def add_transaction(transactions, transaction):
+    if not isinstance(transaction, dict):
+        raise TypeError("Transaction must be Dictionary")
+
+    transactions.append(transaction)

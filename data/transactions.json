@@ -1,0 +1,9 @@
+[
+    {
+        "amount": 250,
+        "date": "2026-08-17",
+        "category": "Food",
+        "type": "expense",
+        "description": "Dinner"
+    }
+]

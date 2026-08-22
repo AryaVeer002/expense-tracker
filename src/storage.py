@@ -12,20 +12,6 @@ def save_transactions(transactions):
         json.dump(transactions, file, indent=4)
 
 
-# if __name__ == "__main__":
-#     transactions = [
-#         {
-#             "amount": 250,
-#             "date": "2026-08-17",
-#             "category": "Food",
-#             "type": "expense",
-#             "description": "Dinner"
-#         }
-#     ]
-
-#     save_transactions(transactions)
-
-#     print("Transactions saved successfully.")
 
 def load_transactions():
     if not DATA_FILE.exists():
@@ -36,22 +22,3 @@ def load_transactions():
 
     return transactions
 
-
-# if __name__ == "__main__":
-#     transactions = [
-#         {
-#             "amount": 250,
-#             "date": "2026-08-17",
-#             "category": "Food",
-#             "type": "expense",
-#             "description": "Dinner"
-#         }
-#     ]
-
-#     save_transactions(transactions)
-
-#     loaded_transactions = load_transactions()
-
-#     print("Saved:", transactions)
-#     print("Loaded:", loaded_transactions)
-#     print("Same data:", transactions == loaded_transactions)

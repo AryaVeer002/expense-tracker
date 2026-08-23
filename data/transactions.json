@@ -19,5 +19,12 @@
         "category": "Food",
         "type": "expense",
         "description": "Lunch"
+    },
+    {
+        "amount": 5000,
+        "date": "2026-08-24",
+        "category": "Salary",
+        "type": "income",
+        "description": "Monthly salary"
     }
 ]

@@ -1,5 +1,6 @@
 import json
 from src.storage import save_transactions, load_transactions
+from src.transactions import create_transaction, add_transaction
 import src.storage as storage
 
 
@@ -132,6 +133,30 @@ def test_multiple_transactions(tmp_path, monkeypatch):
             "description": "Bus"
         }
     ]
+
+    save_transactions(transactions)
+
+    loaded_transactions = load_transactions()
+
+    assert loaded_transactions == transactions
+
+
+def test_transaction_persistence(tmp_path, monkeypatch):
+    transactions = []
+
+    transaction = create_transaction(
+        amount=500,
+        date_str="22/08/2026",
+        category="Food",
+        transaction_type="expense",
+        description="Lunch"
+    )
+
+    add_transaction(transactions, transaction)
+
+    file_path = tmp_path / "transactions.json"
+
+    monkeypatch.setattr(storage, "DATA_FILE", file_path)
 
     save_transactions(transactions)
 

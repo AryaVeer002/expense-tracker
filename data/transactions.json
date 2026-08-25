@@ -26,5 +26,12 @@
         "category": "Salary",
         "type": "income",
         "description": "Monthly salary"
+    },
+    {
+        "amount": 750.0,
+        "date": "2026-08-26",
+        "category": "Food",
+        "type": "expense",
+        "description": "Dinner"
     }
 ]

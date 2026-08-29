@@ -14,7 +14,8 @@ class TransactionRequest(BaseModel):
     date: str
     category: str = Field(min_length=1)
     type: Literal["income", "expense"]
-    description: str
+    description: str = ""
+    
 
     @field_validator("date")
     @classmethod
@@ -54,7 +55,12 @@ def get_transactions():
 
 @app.post(
     "/transactions",
-    response_model=TransactionResponse
+    response_model=TransactionResponse,
+    responses={
+        400: {
+            "description": "Invalid transaction data"
+        }
+    }
 )
 def create_transaction_api(transaction: TransactionRequest):
     try:

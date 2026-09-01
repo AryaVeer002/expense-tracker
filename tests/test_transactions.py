@@ -7,6 +7,7 @@ from src.transactions import (
     validate_description,
     create_transaction,
     add_transaction,
+    generate_transaction_id,
 )
 
 
@@ -33,7 +34,7 @@ def test_today_date():
     assert validate_date(today) is True
 
 def test_invalid_date():
-    assert validate_date("30/08/2026") is False
+    assert validate_date("30/10/2026") is False
     assert validate_date("31/02/2026") is False
     assert validate_date("hello") is False
     assert validate_date("19-08-2026") is False
@@ -142,3 +143,68 @@ def test_add_transaction_wrong_type():
 
     with pytest.raises(TypeError):
         add_transaction(transactions, 250)
+
+
+
+
+def test_generate_transaction_id_empty():
+    transactions = []
+
+    assert generate_transaction_id(transactions) == 1
+
+
+def test_generate_transaction_id_existing_transactions():
+    transactions = [
+        {"id": 1},
+        {"id": 2},
+        {"id": 3}
+    ]
+
+    assert generate_transaction_id(transactions) == 4
+
+
+def test_generate_transaction_id_missing_id():
+    transactions = [
+        {"id": 1},
+        {"id": 3}
+    ]
+
+    assert generate_transaction_id(transactions) == 4
+
+
+
+
+def test_add_transaction_assigns_id():
+    transactions = []
+
+    transaction = create_transaction(
+        amount=500,
+        date_str="26/08/2026",
+        category="Food",
+        transaction_type="expense",
+        description="Lunch"
+    )
+
+    add_transaction(transactions, transaction)
+
+    assert transactions[0]["id"] == 1
+
+
+
+def test_add_transaction_assigns_next_id():
+    transactions = [
+        {"id": 1},
+        {"id": 2}
+    ]
+
+    transaction = create_transaction(
+        amount=500,
+        date_str="26/08/2026",
+        category="Food",
+        transaction_type="expense",
+        description="Lunch"
+    )
+
+    add_transaction(transactions, transaction)
+
+    assert transactions[-1]["id"] == 3

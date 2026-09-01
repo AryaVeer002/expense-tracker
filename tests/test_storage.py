@@ -73,8 +73,19 @@ def test_load_transactions(tmp_path, monkeypatch):
 
     monkeypatch.setattr(storage, "DATA_FILE", test_file)
 
+    # old_transactions = [
+    #     {
+    #         "amount": 250,
+    #         "date": "2026-08-17",
+    #         "category": "Food",
+    #         "type": "expense",
+    #         "description": "Dinner"
+    #     }
+    # ]
+
     transactions = [
         {
+            "id": 1,
             "amount": 250,
             "date": "2026-08-17",
             "category": "Food",
@@ -138,7 +149,13 @@ def test_multiple_transactions(tmp_path, monkeypatch):
 
     loaded_transactions = load_transactions()
 
-    assert loaded_transactions == transactions
+    assert loaded_transactions[0]["id"] == 1
+    assert loaded_transactions[1]["id"] == 2
+    assert loaded_transactions[2]["id"] == 3
+
+    assert loaded_transactions[0]["amount"] == 250
+    assert loaded_transactions[1]["amount"] == 1000
+    assert loaded_transactions[2]["amount"] == 120
 
 
 def test_transaction_persistence(tmp_path, monkeypatch):

@@ -4,34 +4,39 @@
         "date": "2026-08-17",
         "category": "Food",
         "type": "expense",
-        "description": "Dinner"
+        "description": "Dinner",
+        "id": 1
     },
     {
         "amount": 500,
         "date": "2026-08-22",
         "category": "Food",
         "type": "expense",
-        "description": "Lunch"
+        "description": "Lunch",
+        "id": 2
     },
     {
         "amount": 500,
         "date": "2026-08-22",
         "category": "Food",
         "type": "expense",
-        "description": "Lunch"
+        "description": "Lunch",
+        "id": 3
     },
     {
         "amount": 5000,
         "date": "2026-08-24",
         "category": "Salary",
         "type": "income",
-        "description": "Monthly salary"
+        "description": "Monthly salary",
+        "id": 4
     },
     {
         "amount": 750.0,
         "date": "2026-08-26",
         "category": "Food",
         "type": "expense",
-        "description": "Dinner"
+        "description": "Dinner",
+        "id": 5
     }
 ]

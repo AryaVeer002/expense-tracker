@@ -33,6 +33,7 @@ class TransactionRequest(BaseModel):
 
 
 class TransactionResponse(BaseModel):
+    id: int
     amount: float
     date: str
     category: str

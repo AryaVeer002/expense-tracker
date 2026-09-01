@@ -112,10 +112,24 @@ def create_transaction(amount, date_str, category, transaction_type, description
     return transaction
 
 
+def generate_transaction_id(transactions):
+    next_id = max(
+        (
+            transaction["id"]
+            for transaction in transactions
+            if "id" in transaction
+        ),
+        default=0
+    ) + 1
+
+    return next_id
 
 
 def add_transaction(transactions, transaction):
     if not isinstance(transaction, dict):
         raise TypeError("Transaction must be Dictionary")
 
+    transaction["id"] = generate_transaction_id(transactions)
+
     transactions.append(transaction)
+

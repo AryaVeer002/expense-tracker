@@ -133,3 +133,46 @@ def add_transaction(transactions, transaction):
 
     transactions.append(transaction)
 
+
+
+def get_transaction_by_id(transactions, transaction_id):
+    for transaction in transactions:
+        if transaction["id"] == transaction_id:
+            return transaction
+
+    return None
+
+
+
+def update_transaction(transactions, transaction_id, updated_transaction):
+    for transaction in transactions:
+        if transaction["id"] == transaction_id:
+            transaction["amount"] = updated_transaction["amount"]
+            transaction["date"] = updated_transaction["date"]
+            transaction["category"] = updated_transaction["category"]
+            transaction["type"] = updated_transaction["type"]
+            transaction["description"] = updated_transaction["description"]
+            return transaction
+
+    return None
+
+
+def delete_transaction(transactions, transaction_id):
+    for transaction in transactions:
+        if transaction["id"] == transaction_id:
+            transactions.remove(transaction)
+            return transaction
+
+    return None
+
+
+def patch_transaction(transactions, transaction_id, updates):
+    for transaction in transactions:
+        if transaction["id"] == transaction_id:
+            for field, value in updates.items():
+                if field != "id":
+                    transaction[field] = value
+
+            return transaction
+
+    return None

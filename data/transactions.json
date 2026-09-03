@@ -13,14 +13,6 @@
         "category": "Food",
         "type": "expense",
         "description": "Lunch",
-        "id": 2
-    },
-    {
-        "amount": 500,
-        "date": "2026-08-22",
-        "category": "Food",
-        "type": "expense",
-        "description": "Lunch",
         "id": 3
     },
     {
@@ -33,10 +25,10 @@
     },
     {
         "amount": 750.0,
-        "date": "2026-08-26",
+        "date": "26/08/2026",
         "category": "Food",
         "type": "expense",
-        "description": "Dinner",
+        "description": "Updated dinner",
         "id": 5
     }
 ]

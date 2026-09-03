@@ -8,6 +8,9 @@ from src.transactions import (
     create_transaction,
     add_transaction,
     generate_transaction_id,
+    get_transaction_by_id,
+    update_transaction,
+    delete_transaction,
 )
 
 
@@ -208,3 +211,140 @@ def test_add_transaction_assigns_next_id():
     add_transaction(transactions, transaction)
 
     assert transactions[-1]["id"] == 3
+
+
+def test_get_transaction_by_id_found():
+    transactions = [
+        {"id": 1, "amount": 250},
+        {"id": 2, "amount": 500},
+        {"id": 3, "amount": 750}
+    ]
+
+    result = get_transaction_by_id(transactions, 2)
+
+    assert result == {
+        "id": 2,
+        "amount": 500
+    }
+
+
+def test_get_transaction_by_id_not_found():
+    transactions = [
+        {"id": 1, "amount": 250},
+        {"id": 2, "amount": 500}
+    ]
+
+    result = get_transaction_by_id(transactions, 99)
+
+    assert result is None
+
+
+
+    def test_update_transaction():
+        transactions = [
+            {
+                "id": 1,
+                "amount": 500,
+                "date": "01/09/2026",
+                "category": "Food",
+                "type": "expense",
+                "description": "Lunch"
+            }
+        ]
+
+    updated_transaction = {
+        "amount": 650,
+        "date": "01/09/2026",
+        "category": "Food",
+        "type": "expense",
+        "description": "Dinner"
+    }
+
+    result = update_transaction(
+        transactions,
+        1,
+        updated_transaction
+    )
+
+    assert result["id"] == 1
+    assert result["amount"] == 650
+    assert result["description"] == "Dinner"
+
+
+def test_update_transaction_not_found():
+    transactions = [
+        {
+            "id": 1,
+            "amount": 500,
+            "date": "01/09/2026",
+            "category": "Food",
+            "type": "expense",
+            "description": "Lunch"
+        }
+    ]
+
+    updated_transaction = {
+        "amount": 650,
+        "date": "01/09/2026",
+        "category": "Food",
+        "type": "expense",
+        "description": "Dinner"
+    }
+
+    result = update_transaction(
+        transactions,
+        999,
+        updated_transaction
+    )
+
+    assert result is None
+
+
+
+def test_delete_transaction():
+    transactions = [
+        {
+            "id": 1,
+            "amount": 500,
+            "date": "01/09/2026",
+            "category": "Food",
+            "type": "expense",
+            "description": "Lunch"
+        },
+        {
+            "id": 2,
+            "amount": 1000,
+            "date": "01/09/2026",
+            "category": "Salary",
+            "type": "income",
+            "description": "Monthly salary"
+        }
+    ]
+
+    result = delete_transaction(transactions, 1)
+
+    assert result["id"] == 1
+    assert result["amount"] == 500
+    assert len(transactions) == 1
+    assert transactions[0]["id"] == 2
+
+
+def test_delete_transaction_not_found():
+    transactions = [
+        {
+            "id": 1,
+            "amount": 500,
+            "date": "01/09/2026",
+            "category": "Food",
+            "type": "expense",
+            "description": "Lunch"
+        }
+    ]
+
+    result = delete_transaction(transactions, 999)
+
+    assert result is None
+    assert len(transactions) == 1
+
+
+

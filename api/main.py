@@ -4,7 +4,14 @@ from typing import Literal
 from datetime import datetime
 
 from src.storage import load_transactions, save_transactions
-from src.transactions import create_transaction, add_transaction
+from src.transactions import (
+    create_transaction,
+    add_transaction,
+    get_transaction_by_id,
+    update_transaction,
+    delete_transaction,
+    patch_transaction   
+)
 
 app = FastAPI()
 
@@ -15,6 +22,13 @@ class TransactionRequest(BaseModel):
     category: str = Field(min_length=1)
     type: Literal["income", "expense"]
     description: str = ""
+
+class TransactionUpdateRequest(BaseModel):
+    amount: float | None = Field(default=None, gt=0)
+    date: str | None = None
+    category: str | None = Field(default=None, min_length=1)
+    type: Literal["income", "expense"] | None = None
+    description: str | None = None
     
 
     @field_validator("date")
@@ -85,3 +99,119 @@ def create_transaction_api(transaction: TransactionRequest):
             status_code=400,
             detail=str(error)
         )
+
+
+
+@app.get(
+    "/transactions/{transaction_id}",
+    response_model=TransactionResponse,
+    responses={
+        404: {"description": "Transaction not found"}
+    }
+)
+def get_transaction(transaction_id: int):
+    transactions = load_transactions()
+
+    transaction = get_transaction_by_id(
+        transactions,
+        transaction_id
+    )
+
+    if transaction is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Transaction not found"
+        )
+
+    return transaction
+
+
+
+@app.put(
+    "/transactions/{transaction_id}",
+    response_model=TransactionResponse,
+    responses={
+        404: {"description": "Transaction not found"}
+    }
+)
+def update_transaction_api(
+    transaction_id: int,
+    transaction: TransactionRequest
+):
+    transactions = load_transactions()
+
+    updated_transaction = update_transaction(
+        transactions,
+        transaction_id,
+        transaction.model_dump()
+    )
+
+    if updated_transaction is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Transaction not found"
+        )
+
+    save_transactions(transactions)
+
+    return updated_transaction
+
+
+
+
+@app.delete(
+    "/transactions/{transaction_id}",
+    response_model=TransactionResponse,
+    responses={
+        404: {"description": "Transaction not found"}
+    }
+)
+def delete_transaction_api(transaction_id: int):
+    transactions = load_transactions()
+
+    deleted_transaction = delete_transaction(
+        transactions,
+        transaction_id
+    )
+
+    if deleted_transaction is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Transaction not found"
+        )
+
+    save_transactions(transactions)
+
+    return deleted_transaction
+
+
+@app.patch(
+    "/transactions/{transaction_id}",
+    response_model=TransactionResponse,
+    responses={
+        404: {"description": "Transaction not found"}
+    }
+)
+def patch_transaction_api(
+    transaction_id: int,
+    transaction: TransactionUpdateRequest
+):
+    transactions = load_transactions()
+
+    updates = transaction.model_dump(exclude_unset=True)
+
+    updated_transaction = patch_transaction(
+        transactions,
+        transaction_id,
+        updates
+    )
+
+    if updated_transaction is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Transaction not found"
+        )
+
+    save_transactions(transactions)
+
+    return updated_transaction

@@ -40,14 +40,6 @@
         "id": 6
     },
     {
-        "amount": 200.0,
-        "date": "2026-09-03",
-        "category": "Food",
-        "type": "expense",
-        "description": "Coffee",
-        "id": 7
-    },
-    {
         "amount": 10.0,
         "date": "2026-09-03",
         "category": "Food",

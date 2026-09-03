@@ -2,7 +2,6 @@
 // Expense Tracker Frontend
 // ========================================
 
-// FastAPI backend URL
 const API_URL = "http://127.0.0.1:8000";
 
 
@@ -34,16 +33,20 @@ async function loadTransactions() {
 
         transactionsList.innerHTML = `
             <tr>
-                <td colspan="6" class="loading">
+                <td colspan="7" class="loading">
                     Loading transactions...
                 </td>
             </tr>
         `;
 
-        const response = await fetch(`${API_URL}/transactions`);
+        const response = await fetch(
+            `${API_URL}/transactions`
+        );
 
         if (!response.ok) {
-            throw new Error("Failed to load transactions.");
+            throw new Error(
+                "Failed to load transactions."
+            );
         }
 
         const transactions = await response.json();
@@ -54,11 +57,14 @@ async function loadTransactions() {
 
     } catch (error) {
 
-        console.error("Error loading transactions:", error);
+        console.error(
+            "Error loading transactions:",
+            error
+        );
 
         transactionsList.innerHTML = `
             <tr>
-                <td colspan="6" class="error-message">
+                <td colspan="7" class="error-message">
                     Failed to load transactions.
                 </td>
             </tr>
@@ -74,24 +80,38 @@ async function loadTransactions() {
 function updateFinancialOverview(transactions) {
 
     let income = 0;
+
     let expenses = 0;
+
 
     for (const transaction of transactions) {
 
         if (transaction.type === "income") {
+
             income += transaction.amount;
+
         }
 
         if (transaction.type === "expense") {
+
             expenses += transaction.amount;
+
         }
+
     }
+
 
     const balance = income - expenses;
 
-    balanceElement.textContent = formatCurrency(balance);
-    incomeElement.textContent = formatCurrency(income);
-    expensesElement.textContent = formatCurrency(expenses);
+
+    balanceElement.textContent =
+        formatCurrency(balance);
+
+    incomeElement.textContent =
+        formatCurrency(income);
+
+    expensesElement.textContent =
+        formatCurrency(expenses);
 }
 
 
@@ -103,11 +123,12 @@ function displayTransactions(transactions) {
 
     transactionsList.innerHTML = "";
 
+
     if (transactions.length === 0) {
 
         transactionsList.innerHTML = `
             <tr>
-                <td colspan="6" class="empty-message">
+                <td colspan="7" class="empty-message">
                     No transactions found.
                 </td>
             </tr>
@@ -116,29 +137,59 @@ function displayTransactions(transactions) {
         return;
     }
 
+
     for (const transaction of transactions) {
 
         const row = document.createElement("tr");
 
+
         row.innerHTML = `
-            <td>${transaction.id}</td>
-
-            <td>${transaction.date}</td>
-
-            <td>${escapeHTML(transaction.category)}</td>
 
             <td>
-                <span class="transaction-type ${transaction.type}">
+                ${transaction.id}
+            </td>
+
+            <td>
+                ${transaction.date}
+            </td>
+
+            <td>
+                ${escapeHTML(transaction.category)}
+            </td>
+
+            <td>
+
+                <span
+                    class="transaction-type ${transaction.type}"
+                >
                     ${capitalize(transaction.type)}
                 </span>
+
             </td>
 
             <td class="amount ${transaction.type}">
                 ${formatCurrency(transaction.amount)}
             </td>
 
-            <td>${escapeHTML(transaction.description || "-")}</td>
+            <td>
+                ${escapeHTML(
+                    transaction.description || "-"
+                )}
+            </td>
+
+            <td>
+
+                <button
+                    class="delete-button"
+                    data-id="${transaction.id}"
+                >
+                    Delete
+                </button>
+
+            </td>
+
         `;
+
 
         transactionsList.appendChild(row);
     }
@@ -149,69 +200,169 @@ function displayTransactions(transactions) {
 // Add Transaction
 // ========================================
 
-transactionForm.addEventListener("submit", async function (event) {
+transactionForm.addEventListener(
+    "submit",
+    async function (event) {
 
-    event.preventDefault();
-
-    const transaction = {
-
-        amount: Number(amountInput.value),
-
-        date: dateInput.value,
-
-        category: categoryInput.value.trim(),
-
-        type: typeInput.value,
-
-        description: descriptionInput.value.trim()
-    };
+        event.preventDefault();
 
 
-    try {
+        const transaction = {
 
-        const response = await fetch(`${API_URL}/transactions`, {
+            amount: Number(
+                amountInput.value
+            ),
 
-            method: "POST",
+            date: dateInput.value,
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+            category: categoryInput.value.trim(),
 
-            body: JSON.stringify(transaction)
-        });
+            type: typeInput.value,
+
+            description:
+                descriptionInput.value.trim()
+        };
 
 
-        if (!response.ok) {
+        try {
 
-            const errorData = await response.json();
+            const response = await fetch(
+                `${API_URL}/transactions`,
+                {
+                    method: "POST",
 
-            throw new Error(
-                errorData.detail || "Failed to add transaction."
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify(
+                        transaction
+                    )
+                }
             );
+
+
+            if (!response.ok) {
+
+                const errorData =
+                    await response.json();
+
+                throw new Error(
+                    errorData.detail ||
+                    "Failed to add transaction."
+                );
+            }
+
+
+            const newTransaction =
+                await response.json();
+
+
+            console.log(
+                "Transaction added:",
+                newTransaction
+            );
+
+
+            transactionForm.reset();
+
+
+            await loadTransactions();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error adding transaction:",
+                error
+            );
+
+            alert(error.message);
+        }
+
+    }
+);
+
+
+// ========================================
+// Delete Transaction
+// ========================================
+
+transactionsList.addEventListener(
+    "click",
+    async function (event) {
+
+        if (
+            !event.target.classList.contains(
+                "delete-button"
+            )
+        ) {
+            return;
         }
 
 
-        const newTransaction = await response.json();
-
-        console.log("Transaction added:", newTransaction);
-
-
-        // Clear form
-        transactionForm.reset();
+        const transactionId =
+            event.target.dataset.id;
 
 
-        // Reload transactions
-        await loadTransactions();
+        const confirmed = confirm(
+            `Are you sure you want to delete transaction ${transactionId}?`
+        );
 
 
-    } catch (error) {
+        if (!confirmed) {
+            return;
+        }
 
-        console.error("Error adding transaction:", error);
 
-        alert(error.message);
+        try {
+
+            const response = await fetch(
+                `${API_URL}/transactions/${transactionId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+            if (!response.ok) {
+
+                const errorData =
+                    await response.json();
+
+                throw new Error(
+                    errorData.detail ||
+                    "Failed to delete transaction."
+                );
+            }
+
+
+            const deletedTransaction =
+                await response.json();
+
+
+            console.log(
+                "Transaction deleted:",
+                deletedTransaction
+            );
+
+
+            await loadTransactions();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error deleting transaction:",
+                error
+            );
+
+            alert(error.message);
+        }
+
     }
-
-});
+);
 
 
 // ========================================
@@ -220,15 +371,16 @@ transactionForm.addEventListener("submit", async function (event) {
 
 function formatCurrency(amount) {
 
-    return new Intl.NumberFormat("en-IN", {
+    return new Intl.NumberFormat(
+        "en-IN",
+        {
+            style: "currency",
 
-        style: "currency",
+            currency: "INR",
 
-        currency: "INR",
-
-        maximumFractionDigits: 2
-
-    }).format(amount);
+            maximumFractionDigits: 2
+        }
+    ).format(amount);
 }
 
 
@@ -238,7 +390,10 @@ function formatCurrency(amount) {
 
 function capitalize(text) {
 
-    return text.charAt(0).toUpperCase() + text.slice(1);
+    return (
+        text.charAt(0).toUpperCase() +
+        text.slice(1)
+    );
 }
 
 
@@ -248,7 +403,8 @@ function capitalize(text) {
 
 function escapeHTML(value) {
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
 
     div.textContent = value;
 

@@ -297,7 +297,7 @@ table {
 
     border-collapse: collapse;
 
-    min-width: 700px;
+    min-width: 800px;
 }
 
 thead {
@@ -374,6 +374,33 @@ tbody tr:hover {
 
 .amount.expense {
     color: #dc2626;
+}
+
+
+/* ================================
+   Delete Button
+================================ */
+
+.delete-button {
+    padding: 7px 12px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #fee2e2;
+
+    color: #991b1b;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #fecaca;
 }
 
 

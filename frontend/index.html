@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================
+         Header
+    ================================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <h1>💰 Expense Tracker</h1>
+
+            <p>
+                Manage your income and expenses easily.
+            </p>
+
+        </div>
+
+    </header>
+
+
+
+    <main class="container">
+
+
+        <!-- ================================
+             Financial Overview
+        ================================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>Financial Overview</h2>
+
+                <p>
+                    Your current financial summary
+                </p>
+
+            </div>
+
+
+            <div class="overview-cards">
+
+
+                <!-- Balance -->
+
+                <div class="card balance-card">
+
+                    <div class="card-icon">
+                        💰
+                    </div>
+
+                    <div>
+
+                        <h3>Balance</h3>
+
+                        <p id="balance">
+                            ₹0
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Income -->
+
+                <div class="card income-card">
+
+                    <div class="card-icon">
+                        📈
+                    </div>
+
+                    <div>
+
+                        <h3>Income</h3>
+
+                        <p id="income">
+                            ₹0
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Expenses -->
+
+                <div class="card expense-card">
+
+                    <div class="card-icon">
+                        📉
+                    </div>
+
+                    <div>
+
+                        <h3>Expenses</h3>
+
+                        <p id="expenses">
+                            ₹0
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================
+             Add Transaction
+        ================================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>Add Transaction</h2>
+
+                <p>
+                    Record a new income or expense.
+                </p>
+
+            </div>
+
+
+            <form
+                id="transaction-form"
+                class="transaction-form"
+            >
+
+
+                <!-- Amount -->
+
+                <div class="form-group">
+
+                    <label for="amount">
+                        Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        placeholder="Enter amount"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Date -->
+
+                <div class="form-group">
+
+                    <label for="date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Category -->
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <input
+                        type="text"
+                        id="category"
+                        name="category"
+                        placeholder="Food, Salary, Travel..."
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Type -->
+
+                <div class="form-group">
+
+                    <label for="type">
+                        Type
+                    </label>
+
+                    <select
+                        id="type"
+                        name="type"
+                    >
+
+                        <option value="expense">
+                            Expense
+                        </option>
+
+                        <option value="income">
+                            Income
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Description -->
+
+                <div class="form-group full-width">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        placeholder="Optional description"
+                    >
+
+                </div>
+
+
+
+                <!-- Button -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        + Add Transaction
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+
+        <!-- ================================
+             Recent Transactions
+        ================================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>Recent Transactions</h2>
+
+                <p>
+                    Your latest financial activity
+                </p>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Date</th>
+
+                            <th>Category</th>
+
+                            <th>Type</th>
+
+                            <th>Amount</th>
+
+                            <th>Description</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="transactions-list">
+
+                        <!--
+                            JavaScript will insert
+                            transactions here.
+                        -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ================================
+         Footer
+    ================================= -->
+
+    <footer class="footer">
+
+        <p>
+            Expense Tracker • Built with HTML, CSS & FastAPI
+        </p>
+
+    </footer>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

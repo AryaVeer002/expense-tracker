@@ -33,7 +33,7 @@ def test_valid_date():
     assert validate_date("15/8/2026") is True
 
 def test_today_date():
-    today = datetime.today().strftime("%d/%m/%Y")
+    today = datetime.today().strftime("%Y-%m-%d")
     assert validate_date(today) is True
 
 def test_invalid_date():

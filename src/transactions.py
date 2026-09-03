@@ -16,22 +16,38 @@ def validate_amount(amount):
     return False
 
 
+from datetime import datetime, date
+
+
+def parse_date(date_str):
+    formats = [
+        "%Y-%m-%d",   # HTML date input
+        "%d/%m/%Y"    # Existing project format
+    ]
+
+    for date_format in formats:
+        try:
+            return datetime.strptime(
+                date_str,
+                date_format
+            ).date()
+
+        except ValueError:
+            continue
+
+    return None
+
+
 def validate_date(date_str):
+    transaction_date = parse_date(date_str)
 
-    try:
-        valid_date = datetime.strptime(date_str, "%d/%m/%Y").date()
-
-
-        today = datetime.today().date()
-
-
-        if valid_date > today:
-            return False
-
-        return True
-
-    except ValueError:
+    if transaction_date is None:
         return False
+
+    if transaction_date > date.today():
+        return False
+
+    return True
 
 
 
@@ -79,16 +95,21 @@ def validate_description(description):
     return False
 
 
-def create_transaction(amount, date_str, category, transaction_type, description):
+def create_transaction(
+    amount,
+    date_str,
+    category,
+    transaction_type,
+    description=""
+):
     if not validate_amount(amount):
-        raise ValueError("Invalid amount")
+        raise ValueError("Invalid Amount")
 
     if not validate_date(date_str):
-            raise ValueError("Invalid Date")
+        raise ValueError("Invalid Date")
 
-    
     if not validate_category(category):
-            raise ValueError("Invalid Category")
+        raise ValueError("Invalid Category")
 
     if not validate_type(transaction_type):
         raise ValueError("Invalid Type")
@@ -96,21 +117,15 @@ def create_transaction(amount, date_str, category, transaction_type, description
     if not validate_description(description):
         raise ValueError("Invalid Description")
 
-    category = category.strip()
-    transaction_type = transaction_type.strip().lower()
-    description = description.strip()
+    formatted_date = parse_date(date_str).isoformat()
 
-    formatted_date = datetime.strptime(date_str, "%d/%m/%Y").date().isoformat()
-
-    transaction = {
-    "amount": amount,
-    "date": formatted_date,
-    "category": category,
-    "type": transaction_type,
-    "description": description
+    return {
+        "amount": amount,
+        "date": formatted_date,
+        "category": category.strip(),
+        "type": transaction_type.strip().lower(),
+        "description": description.strip()
     }
-    return transaction
-
 
 def generate_transaction_id(transactions):
     next_id = max(

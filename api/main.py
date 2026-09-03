@@ -13,8 +13,20 @@ from src.transactions import (
     patch_transaction   
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class TransactionRequest(BaseModel):
     amount: float = Field(gt=0)
@@ -34,10 +46,10 @@ class TransactionUpdateRequest(BaseModel):
     @field_validator("date")
     @classmethod
     def validate_date_format(cls, value):
-        for date_format in ("%d/%m/%Y", "%Y-%m-%d"):
+        for date_format in ("%Y-%m-%d"):
             try:
                 parsed_date = datetime.strptime(value, date_format)
-                return parsed_date.strftime("%d/%m/%Y")
+                return parsed_date.strftime("%Y-%m-%d")
             except ValueError:
                 continue
 

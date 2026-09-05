@@ -1,3 +1,7 @@
+/* ================================= */
+/* Global */
+/* ================================= */
+
 * {
     box-sizing: border-box;
 }
@@ -7,7 +11,10 @@ body {
     margin: 0;
     padding: 0;
 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     background-color: #f5f7fb;
 
@@ -24,9 +31,10 @@ body {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Header */
-/* ============================= */
+/* ================================= */
 
 .header {
     background-color: #111827;
@@ -55,9 +63,10 @@ body {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Sections */
-/* ============================= */
+/* ================================= */
 
 .section {
     background-color: white;
@@ -69,7 +78,12 @@ body {
     border-radius: 12px;
 
     box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.06);
+        0 4px 12px rgba(
+            0,
+            0,
+            0,
+            0.06
+        );
 }
 
 
@@ -94,9 +108,10 @@ body {
 }
 
 
-/* ============================= */
-/* Financial Cards */
-/* ============================= */
+
+/* ================================= */
+/* Financial Overview */
+/* ================================= */
 
 .overview-cards {
     display: flex;
@@ -126,11 +141,13 @@ body {
 
 .card-icon {
     width: 50px;
+
     height: 50px;
 
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     border-radius: 50%;
@@ -138,6 +155,8 @@ body {
     font-size: 24px;
 
     background-color: #f3f4f6;
+
+    flex-shrink: 0;
 }
 
 
@@ -176,14 +195,21 @@ body {
 }
 
 
-/* ============================= */
+.count-card {
+    border-left: 5px solid #7c3aed;
+}
+
+
+
+/* ================================= */
 /* Transaction Form */
-/* ============================= */
+/* ================================= */
 
 .transaction-form {
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+        repeat(2, 1fr);
 
     gap: 20px;
 }
@@ -235,7 +261,13 @@ body {
     border-color: #6366f1;
 
     box-shadow:
-        0 0 0 3px rgba(99, 102, 241, 0.1);
+        0 0 0 3px
+        rgba(
+            99,
+            102,
+            241,
+            0.1
+        );
 }
 
 
@@ -253,9 +285,10 @@ body {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Search / Filter */
-/* ============================= */
+/* ================================= */
 
 .filter-controls {
     display: grid;
@@ -292,9 +325,10 @@ body {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Buttons */
-/* ============================= */
+/* ================================= */
 
 .primary-button {
     padding: 12px 20px;
@@ -344,9 +378,46 @@ body {
 }
 
 
-/* ============================= */
+
+/* ================================= */
+/* Analytics */
+/* ================================= */
+
+.category-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 15px;
+}
+
+
+.category-chip {
+    padding: 14px 20px;
+
+    border-radius: 10px;
+
+    background-color: #eef2ff;
+
+    color: #4338ca;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    border: 1px solid #c7d2fe;
+}
+
+
+.category-chip span {
+    font-weight: normal;
+}
+
+
+
+/* ================================= */
 /* Table */
-/* ============================= */
+/* ================================= */
 
 .table-container {
     width: 100%;
@@ -378,14 +449,16 @@ th {
 
     color: #6b7280;
 
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom:
+        1px solid #e5e7eb;
 }
 
 
 td {
     padding: 14px;
 
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom:
+        1px solid #f0f0f0;
 
     font-size: 14px;
 }
@@ -396,9 +469,10 @@ tbody tr:hover {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Transaction Type */
-/* ============================= */
+/* ================================= */
 
 .transaction-type {
     display: inline-block;
@@ -427,9 +501,10 @@ tbody tr:hover {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Amount */
-/* ============================= */
+/* ================================= */
 
 .amount {
     font-weight: bold;
@@ -446,9 +521,10 @@ tbody tr:hover {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Action Buttons */
-/* ============================= */
+/* ================================= */
 
 .action-buttons {
     display: flex;
@@ -505,9 +581,10 @@ tbody tr:hover {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* States */
-/* ============================= */
+/* ================================= */
 
 .loading,
 .empty-message,
@@ -525,9 +602,10 @@ tbody tr:hover {
 }
 
 
-/* ============================= */
+
+/* ================================= */
 /* Footer */
-/* ============================= */
+/* ================================= */
 
 .footer {
     text-align: center;
@@ -540,11 +618,22 @@ tbody tr:hover {
 }
 
 
-/* ============================= */
-/* Responsive */
-/* ============================= */
 
-@media (max-width: 1000px) {
+/* ================================= */
+/* Responsive */
+/* ================================= */
+
+@media (max-width: 1100px) {
+
+    .overview-cards {
+        flex-wrap: wrap;
+    }
+
+
+    .card {
+        min-width: 45%;
+    }
+
 
     .filter-controls {
         grid-template-columns:
@@ -563,6 +652,11 @@ tbody tr:hover {
 
     .overview-cards {
         flex-direction: column;
+    }
+
+
+    .card {
+        min-width: 100%;
     }
 
 

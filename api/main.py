@@ -4,6 +4,12 @@ from typing import Literal
 from datetime import datetime
 
 from src.storage import load_transactions, save_transactions
+
+from src.analysis import (
+    calculate_summary,
+    calculate_category_expenses
+)
+
 from src.transactions import (
     create_transaction,
     add_transaction,
@@ -227,3 +233,32 @@ def patch_transaction_api(
     save_transactions(transactions)
 
     return updated_transaction
+
+
+
+
+@app.get("/summary")
+def get_summary():
+
+    transactions = load_transactions()
+
+    summary = calculate_summary(
+        transactions
+    )
+
+    summary["transaction_count"] = len(
+        transactions
+    )
+
+    return summary
+
+
+
+@app.get("/analytics/categories")
+def get_category_analytics():
+
+    transactions = load_transactions()
+
+    return calculate_category_expenses(
+        transactions
+    )

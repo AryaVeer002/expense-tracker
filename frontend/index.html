@@ -2,22 +2,38 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Expense Tracker</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 
 <body>
 
+
+<!-- ================================= -->
+<!-- Header -->
+<!-- ================================= -->
+
 <header class="header">
 
     <div class="container">
 
-        <h1>💰 Expense Tracker</h1>
+        <h1>
+            💰 Expense Tracker
+        </h1>
 
         <p>
             Manage your income and expenses easily.
@@ -31,9 +47,9 @@
 <main class="container">
 
 
-    <!-- ============================= -->
+    <!-- ================================= -->
     <!-- Financial Overview -->
-    <!-- ============================= -->
+    <!-- ================================= -->
 
     <section class="section">
 
@@ -53,6 +69,8 @@
         <div class="overview-cards">
 
 
+            <!-- Balance -->
+
             <div class="card balance-card">
 
                 <div class="card-icon">
@@ -66,13 +84,15 @@
                     </h3>
 
                     <p id="balance">
-                        ₹0
+                        ₹0.00
                     </p>
 
                 </div>
 
             </div>
 
+
+            <!-- Income -->
 
             <div class="card income-card">
 
@@ -87,13 +107,15 @@
                     </h3>
 
                     <p id="income">
-                        ₹0
+                        ₹0.00
                     </p>
 
                 </div>
 
             </div>
 
+
+            <!-- Expenses -->
 
             <div class="card expense-card">
 
@@ -108,7 +130,30 @@
                     </h3>
 
                     <p id="expenses">
-                        ₹0
+                        ₹0.00
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Transaction Count -->
+
+            <div class="card count-card">
+
+                <div class="card-icon">
+                    📄
+                </div>
+
+                <div>
+
+                    <h3>
+                        Transactions
+                    </h3>
+
+                    <p id="transaction-count-value">
+                        0
                     </p>
 
                 </div>
@@ -122,9 +167,9 @@
 
 
 
-    <!-- ============================= -->
+    <!-- ================================= -->
     <!-- Add / Edit Transaction -->
-    <!-- ============================= -->
+    <!-- ================================= -->
 
     <section class="section">
 
@@ -147,6 +192,8 @@
         >
 
 
+            <!-- Amount -->
+
             <div class="form-group">
 
                 <label for="amount">
@@ -166,6 +213,8 @@
             </div>
 
 
+            <!-- Date -->
+
             <div class="form-group">
 
                 <label for="date">
@@ -181,6 +230,8 @@
 
             </div>
 
+
+            <!-- Category -->
 
             <div class="form-group">
 
@@ -199,13 +250,18 @@
             </div>
 
 
+            <!-- Type -->
+
             <div class="form-group">
 
                 <label for="type">
                     Type
                 </label>
 
-                <select id="type" name="type">
+                <select
+                    id="type"
+                    name="type"
+                >
 
                     <option value="expense">
                         Expense
@@ -219,6 +275,8 @@
 
             </div>
 
+
+            <!-- Description -->
 
             <div class="form-group full-width">
 
@@ -235,6 +293,8 @@
 
             </div>
 
+
+            <!-- Form Buttons -->
 
             <div class="form-actions">
 
@@ -265,9 +325,9 @@
 
 
 
-    <!-- ============================= -->
-    <!-- Search / Filter / Sort -->
-    <!-- ============================= -->
+    <!-- ================================= -->
+    <!-- Search / Filtering / Sorting -->
+    <!-- ================================= -->
 
     <section class="section">
 
@@ -350,7 +410,7 @@
             </div>
 
 
-            <!-- Start Date -->
+            <!-- From Date -->
 
             <div class="filter-group">
 
@@ -366,7 +426,7 @@
             </div>
 
 
-            <!-- End Date -->
+            <!-- To Date -->
 
             <div class="filter-group">
 
@@ -434,9 +494,43 @@
 
 
 
-    <!-- ============================= -->
+    <!-- ================================= -->
+    <!-- Expense Analytics -->
+    <!-- ================================= -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Expense Analytics
+            </h2>
+
+            <p>
+                Spending grouped by category.
+            </p>
+
+        </div>
+
+
+        <div
+            id="category-list"
+            class="category-list"
+        >
+
+            <p class="loading">
+                Loading analytics...
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================= -->
     <!-- Recent Transactions -->
-    <!-- ============================= -->
+    <!-- ================================= -->
 
     <section class="section">
 
@@ -461,19 +555,33 @@
 
                     <tr>
 
-                        <th>ID</th>
+                        <th>
+                            ID
+                        </th>
 
-                        <th>Date</th>
+                        <th>
+                            Date
+                        </th>
 
-                        <th>Category</th>
+                        <th>
+                            Category
+                        </th>
 
-                        <th>Type</th>
+                        <th>
+                            Type
+                        </th>
 
-                        <th>Amount</th>
+                        <th>
+                            Amount
+                        </th>
 
-                        <th>Description</th>
+                        <th>
+                            Description
+                        </th>
 
-                        <th>Action</th>
+                        <th>
+                            Action
+                        </th>
 
                     </tr>
 
@@ -482,7 +590,16 @@
 
                 <tbody id="transactions-list">
 
-                    <!-- JavaScript inserts transactions -->
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="loading"
+                        >
+                            Loading transactions...
+                        </td>
+
+                    </tr>
 
                 </tbody>
 
@@ -496,6 +613,10 @@
 </main>
 
 
+
+<!-- ================================= -->
+<!-- Footer -->
+<!-- ================================= -->
 
 <footer class="footer">
 

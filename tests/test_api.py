@@ -595,3 +595,31 @@ def test_patch_transaction_invalid_type():
     )
 
     assert response.status_code == 422
+
+
+
+def test_get_summary():
+
+    response = client.get("/summary")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert "income" in data
+    assert "expenses" in data
+    assert "balance" in data
+    assert "transaction_count" in data
+
+
+def test_get_category_analytics():
+
+    response = client.get(
+        "/analytics/categories"
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert isinstance(data, dict)

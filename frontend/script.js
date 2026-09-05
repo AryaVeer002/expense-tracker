@@ -3,91 +3,164 @@
 // ========================================
 
 
-const API_URL = "http://127.0.0.1:8000";
+// ========================================
+// API
+// ========================================
+
+const API_URL =
+    "http://127.0.0.1:8000";
 
 
 // ========================================
 // DOM Elements
 // ========================================
 
+
+// Financial overview
+
 const balanceElement =
-    document.getElementById("balance");
+    document.getElementById(
+        "balance"
+    );
 
 const incomeElement =
-    document.getElementById("income");
+    document.getElementById(
+        "income"
+    );
 
 const expensesElement =
-    document.getElementById("expenses");
+    document.getElementById(
+        "expenses"
+    );
 
+const transactionCountValueElement =
+    document.getElementById(
+        "transaction-count-value"
+    );
+
+
+// Transaction form
 
 const transactionForm =
-    document.getElementById("transaction-form");
-
-const transactionsList =
-    document.getElementById("transactions-list");
-
+    document.getElementById(
+        "transaction-form"
+    );
 
 const amountInput =
-    document.getElementById("amount");
+    document.getElementById(
+        "amount"
+    );
 
 const dateInput =
-    document.getElementById("date");
+    document.getElementById(
+        "date"
+    );
 
 const categoryInput =
-    document.getElementById("category");
+    document.getElementById(
+        "category"
+    );
 
 const typeInput =
-    document.getElementById("type");
+    document.getElementById(
+        "type"
+    );
 
 const descriptionInput =
-    document.getElementById("description");
+    document.getElementById(
+        "description"
+    );
 
+
+// Form controls
 
 const formTitle =
-    document.getElementById("form-title");
+    document.getElementById(
+        "form-title"
+    );
 
 const formDescription =
-    document.getElementById("form-description");
+    document.getElementById(
+        "form-description"
+    );
 
 const submitButton =
-    document.getElementById("submit-button");
+    document.getElementById(
+        "submit-button"
+    );
 
 const cancelEditButton =
-    document.getElementById("cancel-edit-button");
+    document.getElementById(
+        "cancel-edit-button"
+    );
 
 
-const searchInput =
-    document.getElementById("search-input");
+// Transactions
 
-const typeFilter =
-    document.getElementById("type-filter");
-
-const categoryFilter =
-    document.getElementById("category-filter");
-
-const startDateInput =
-    document.getElementById("start-date");
-
-const endDateInput =
-    document.getElementById("end-date");
-
-const sortFilter =
-    document.getElementById("sort-filter");
-
-const clearFiltersButton =
-    document.getElementById("clear-filters");
+const transactionsList =
+    document.getElementById(
+        "transactions-list"
+    );
 
 const transactionCount =
-    document.getElementById("transaction-count");
+    document.getElementById(
+        "transaction-count"
+    );
+
+
+// Search / filters
+
+const searchInput =
+    document.getElementById(
+        "search-input"
+    );
+
+const typeFilter =
+    document.getElementById(
+        "type-filter"
+    );
+
+const categoryFilter =
+    document.getElementById(
+        "category-filter"
+    );
+
+const startDateInput =
+    document.getElementById(
+        "start-date"
+    );
+
+const endDateInput =
+    document.getElementById(
+        "end-date"
+    );
+
+const sortFilter =
+    document.getElementById(
+        "sort-filter"
+    );
+
+const clearFiltersButton =
+    document.getElementById(
+        "clear-filters"
+    );
+
+
+// Analytics
+
+const categoryList =
+    document.getElementById(
+        "category-list"
+    );
 
 
 // ========================================
 // Application State
 // ========================================
 
-let editingTransactionId = null;
-
 let allTransactions = [];
+
+let editingTransactionId = null;
 
 
 // ========================================
@@ -100,7 +173,10 @@ async function loadTransactions() {
 
         transactionsList.innerHTML = `
             <tr>
-                <td colspan="7" class="loading">
+                <td
+                    colspan="7"
+                    class="loading"
+                >
                     Loading transactions...
                 </td>
             </tr>
@@ -126,24 +202,23 @@ async function loadTransactions() {
             await response.json();
 
 
-        // Store all transactions
         allTransactions =
             transactions;
 
 
-        // Update dashboard using ALL transactions
+        // Update dashboard
         updateFinancialOverview(
             allTransactions
         );
 
 
-        // Build category filter
+        // Update category filter
         populateCategoryFilter(
             allTransactions
         );
 
 
-        // Display filtered transactions
+        // Apply current filters
         applyFilters();
 
 
@@ -157,7 +232,10 @@ async function loadTransactions() {
 
         transactionsList.innerHTML = `
             <tr>
-                <td colspan="7" class="error-message">
+                <td
+                    colspan="7"
+                    class="error-message"
+                >
                     Failed to load transactions.
                 </td>
             </tr>
@@ -169,7 +247,147 @@ async function loadTransactions() {
 
 
 // ========================================
-// Financial Overview
+// Load Summary
+// ========================================
+
+async function loadSummary() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/summary`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to load summary."
+            );
+
+        }
+
+
+        const summary =
+            await response.json();
+
+
+        balanceElement.textContent =
+            formatCurrency(
+                summary.balance
+            );
+
+
+        incomeElement.textContent =
+            formatCurrency(
+                summary.income
+            );
+
+
+        expensesElement.textContent =
+            formatCurrency(
+                summary.expenses
+            );
+
+
+        transactionCountValueElement.textContent =
+            summary.transaction_count;
+
+
+    } catch (error) {
+
+        console.error(
+            "Error loading summary:",
+            error
+        );
+
+    }
+
+}
+
+
+// ========================================
+// Load Category Analytics
+// ========================================
+
+async function loadCategoryAnalytics() {
+
+    try {
+
+        categoryList.innerHTML = `
+            <p class="loading">
+                Loading analytics...
+            </p>
+        `;
+
+        const response = await fetch(
+            `${API_URL}/analytics/categories`
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Failed to load category analytics."
+            );
+        }
+
+        const categories = await response.json();
+
+        categoryList.innerHTML = "";
+
+        const entries = Object.entries(categories);
+
+        if (entries.length === 0) {
+
+            categoryList.innerHTML = `
+                <p class="empty-message">
+                    No expense data available.
+                </p>
+            `;
+
+            return;
+        }
+
+        entries.sort(
+            (a, b) =>
+                Number(b[1]) - Number(a[1])
+        );
+
+        for (
+            const [category, amount]
+            of entries
+        ) {
+
+            const chip =
+                document.createElement("div");
+
+            chip.className =
+                "category-chip";
+
+            chip.textContent =
+                `${category}: ${formatCurrency(amount)}`;
+
+            categoryList.appendChild(chip);
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Error loading category analytics:",
+            error
+        );
+
+        categoryList.innerHTML = `
+            <p class="error-message">
+                Failed to load analytics.
+            </p>
+        `;
+    }
+}
+
+
+// ========================================
+// Update Financial Overview
 // ========================================
 
 function updateFinancialOverview(
@@ -177,47 +395,49 @@ function updateFinancialOverview(
 ) {
 
     let income = 0;
-
     let expenses = 0;
 
-
-    for (const transaction of transactions) {
+    for (
+        const transaction
+        of transactions
+    ) {
 
         if (
             transaction.type === "income"
         ) {
 
-            income += transaction.amount;
+            income += Number(
+                transaction.amount
+            );
 
         }
-
 
         if (
             transaction.type === "expense"
         ) {
 
-            expenses += transaction.amount;
+            expenses += Number(
+                transaction.amount
+            );
 
         }
 
     }
 
-
     const balance =
         income - expenses;
-
 
     balanceElement.textContent =
         formatCurrency(balance);
 
-
     incomeElement.textContent =
         formatCurrency(income);
-
 
     expensesElement.textContent =
         formatCurrency(expenses);
 
+    transactionCountValueElement.textContent =
+        transactions.length;
 }
 
 
@@ -229,7 +449,7 @@ function populateCategoryFilter(
     transactions
 ) {
 
-    const currentCategory =
+    const selectedCategory =
         categoryFilter.value;
 
 
@@ -237,9 +457,14 @@ function populateCategoryFilter(
         new Set();
 
 
-    for (const transaction of transactions) {
+    for (
+        const transaction
+        of transactions
+    ) {
 
-        if (transaction.category) {
+        if (
+            transaction.category
+        ) {
 
             categories.add(
                 transaction.category
@@ -270,7 +495,9 @@ function populateCategoryFilter(
     ) {
 
         const option =
-            document.createElement("option");
+            document.createElement(
+                "option"
+            );
 
 
         option.value =
@@ -288,15 +515,14 @@ function populateCategoryFilter(
     }
 
 
-    // Preserve selected category
     if (
         sortedCategories.includes(
-            currentCategory
+            selectedCategory
         )
     ) {
 
         categoryFilter.value =
-            currentCategory;
+            selectedCategory;
 
     }
 
@@ -304,7 +530,7 @@ function populateCategoryFilter(
 
 
 // ========================================
-// Apply Search + Filters + Sorting
+// Apply Search / Filters / Sorting
 // ========================================
 
 function applyFilters() {
@@ -330,28 +556,46 @@ function applyFilters() {
                 transaction => {
 
                     const category =
-                        transaction.category
-                            ?.toLowerCase() || "";
+                        String(
+                            transaction.category ||
+                            ""
+                        ).toLowerCase();
 
 
                     const description =
-                        transaction.description
-                            ?.toLowerCase() || "";
+                        String(
+                            transaction.description ||
+                            ""
+                        ).toLowerCase();
 
 
                     const type =
-                        transaction.type
-                            ?.toLowerCase() || "";
+                        String(
+                            transaction.type ||
+                            ""
+                        ).toLowerCase();
+
+
+                    const id =
+                        String(
+                            transaction.id
+                        );
 
 
                     return (
                         category.includes(
                             searchText
                         ) ||
+
                         description.includes(
                             searchText
                         ) ||
+
                         type.includes(
+                            searchText
+                        ) ||
+
+                        id.includes(
                             searchText
                         )
                     );
@@ -370,7 +614,9 @@ function applyFilters() {
         typeFilter.value;
 
 
-    if (selectedType !== "all") {
+    if (
+        selectedType !== "all"
+    ) {
 
         filteredTransactions =
             filteredTransactions.filter(
@@ -405,15 +651,11 @@ function applyFilters() {
 
 
     // ====================================
-    // Date Range
+    // Start Date
     // ====================================
 
     const startDate =
         startDateInput.value;
-
-
-    const endDate =
-        endDateInput.value;
 
 
     if (startDate) {
@@ -422,17 +664,29 @@ function applyFilters() {
             filteredTransactions.filter(
                 transaction => {
 
-                    const date =
+                    const transactionDate =
                         convertToInputDate(
                             transaction.date
                         );
 
-                    return date >= startDate;
+
+                    return (
+                        transactionDate >=
+                        startDate
+                    );
 
                 }
             );
 
     }
+
+
+    // ====================================
+    // End Date
+    // ====================================
+
+    const endDate =
+        endDateInput.value;
 
 
     if (endDate) {
@@ -441,12 +695,16 @@ function applyFilters() {
             filteredTransactions.filter(
                 transaction => {
 
-                    const date =
+                    const transactionDate =
                         convertToInputDate(
                             transaction.date
                         );
 
-                    return date <= endDate;
+
+                    return (
+                        transactionDate <=
+                        endDate
+                    );
 
                 }
             );
@@ -472,9 +730,16 @@ function applyFilters() {
     );
 
 
-    // Update count
+    // ====================================
+    // Count
+    // ====================================
+
     transactionCount.textContent =
-        `Showing ${filteredTransactions.length} of ${allTransactions.length} transactions`;
+        `Showing ${
+            filteredTransactions.length
+        } of ${
+            allTransactions.length
+        } transactions`;
 
 }
 
@@ -494,7 +759,6 @@ function sortTransactions(
     transactions.sort(
         (a, b) => {
 
-            // Convert dates to ISO
             const dateA =
                 convertToInputDate(
                     a.date
@@ -508,7 +772,8 @@ function sortTransactions(
 
 
             if (
-                sortType === "newest"
+                sortType ===
+                "newest"
             ) {
 
                 return (
@@ -521,7 +786,8 @@ function sortTransactions(
 
 
             if (
-                sortType === "oldest"
+                sortType ===
+                "oldest"
             ) {
 
                 return (
@@ -534,22 +800,26 @@ function sortTransactions(
 
 
             if (
-                sortType === "highest"
+                sortType ===
+                "highest"
             ) {
 
                 return (
-                    b.amount - a.amount
+                    Number(b.amount) -
+                    Number(a.amount)
                 );
 
             }
 
 
             if (
-                sortType === "lowest"
+                sortType ===
+                "lowest"
             ) {
 
                 return (
-                    a.amount - b.amount
+                    Number(a.amount) -
+                    Number(b.amount)
                 );
 
             }
@@ -600,74 +870,210 @@ function displayTransactions(
     ) {
 
         const row =
-            document.createElement("tr");
+            document.createElement(
+                "tr"
+            );
 
 
-        row.innerHTML = `
+        // ID
 
-            <td>
-                ${transaction.id}
-            </td>
+        const idCell =
+            document.createElement(
+                "td"
+            );
 
-            <td>
-                ${transaction.date}
-            </td>
+        idCell.textContent =
+            transaction.id;
 
-            <td>
-                ${escapeHTML(
-                    transaction.category
-                )}
-            </td>
 
-            <td>
+        // Date
 
-                <span
-                    class="transaction-type ${transaction.type}"
-                >
-                    ${capitalize(
-                        transaction.type
-                    )}
-                </span>
+        const dateCell =
+            document.createElement(
+                "td"
+            );
 
-            </td>
+        dateCell.textContent =
+            transaction.date;
 
-            <td
-                class="amount ${transaction.type}"
-            >
-                ${formatCurrency(
-                    transaction.amount
-                )}
-            </td>
 
-            <td>
-                ${escapeHTML(
-                    transaction.description || "-"
-                )}
-            </td>
+        // Category
 
-            <td>
+        const categoryCell =
+            document.createElement(
+                "td"
+            );
 
-                <div class="action-buttons">
+        categoryCell.textContent =
+            transaction.category;
 
-                    <button
-                        class="edit-button"
-                        data-id="${transaction.id}"
-                    >
-                        Edit
-                    </button>
 
-                    <button
-                        class="delete-button"
-                        data-id="${transaction.id}"
-                    >
-                        Delete
-                    </button>
+        // Type
 
-                </div>
+        const typeCell =
+            document.createElement(
+                "td"
+            );
 
-            </td>
 
-        `;
+        const typeBadge =
+            document.createElement(
+                "span"
+            );
+
+
+        typeBadge.className =
+            `transaction-type ${
+                transaction.type
+            }`;
+
+
+        typeBadge.textContent =
+            capitalize(
+                transaction.type
+            );
+
+
+        typeCell.appendChild(
+            typeBadge
+        );
+
+
+        // Amount
+
+        const amountCell =
+            document.createElement(
+                "td"
+            );
+
+
+        amountCell.className =
+            `amount ${
+                transaction.type
+            }`;
+
+
+        amountCell.textContent =
+            formatCurrency(
+                transaction.amount
+            );
+
+
+        // Description
+
+        const descriptionCell =
+            document.createElement(
+                "td"
+            );
+
+
+        descriptionCell.textContent =
+            transaction.description ||
+            "-";
+
+
+        // Actions
+
+        const actionCell =
+            document.createElement(
+                "td"
+            );
+
+
+        const actionButtons =
+            document.createElement(
+                "div"
+            );
+
+
+        actionButtons.className =
+            "action-buttons";
+
+
+        // Edit button
+
+        const editButton =
+            document.createElement(
+                "button"
+            );
+
+
+        editButton.className =
+            "edit-button";
+
+
+        editButton.dataset.id =
+            transaction.id;
+
+
+        editButton.textContent =
+            "Edit";
+
+
+        // Delete button
+
+        const deleteButton =
+            document.createElement(
+                "button"
+            );
+
+
+        deleteButton.className =
+            "delete-button";
+
+
+        deleteButton.dataset.id =
+            transaction.id;
+
+
+        deleteButton.textContent =
+            "Delete";
+
+
+        actionButtons.appendChild(
+            editButton
+        );
+
+
+        actionButtons.appendChild(
+            deleteButton
+        );
+
+
+        actionCell.appendChild(
+            actionButtons
+        );
+
+
+        // Build row
+
+        row.appendChild(
+            idCell
+        );
+
+        row.appendChild(
+            dateCell
+        );
+
+        row.appendChild(
+            categoryCell
+        );
+
+        row.appendChild(
+            typeCell
+        );
+
+        row.appendChild(
+            amountCell
+        );
+
+        row.appendChild(
+            descriptionCell
+        );
+
+        row.appendChild(
+            actionCell
+        );
 
 
         transactionsList.appendChild(
@@ -717,18 +1123,20 @@ transactionForm.addEventListener(
             let response;
 
 
-            // ====================================
+            // =================================
             // ADD
-            // ====================================
+            // =================================
 
             if (
-                editingTransactionId === null
+                editingTransactionId ===
+                null
             ) {
 
                 response =
                     await fetch(
                         `${API_URL}/transactions`,
                         {
+
                             method: "POST",
 
                             headers: {
@@ -740,22 +1148,26 @@ transactionForm.addEventListener(
                                 JSON.stringify(
                                     transaction
                                 )
+
                         }
                     );
 
             }
 
 
-            // ====================================
+            // =================================
             // UPDATE
-            // ====================================
+            // =================================
 
             else {
 
                 response =
                     await fetch(
-                        `${API_URL}/transactions/${editingTransactionId}`,
+                        `${API_URL}/transactions/${
+                            editingTransactionId
+                        }`,
                         {
+
                             method: "PUT",
 
                             headers: {
@@ -767,6 +1179,7 @@ transactionForm.addEventListener(
                                 JSON.stringify(
                                     transaction
                                 )
+
                         }
                     );
 
@@ -800,7 +1213,7 @@ transactionForm.addEventListener(
             resetForm();
 
 
-            await loadTransactions();
+            await refreshDashboard();
 
 
         } catch (error) {
@@ -811,7 +1224,9 @@ transactionForm.addEventListener(
             );
 
 
-            alert(error.message);
+            alert(
+                error.message
+            );
 
         }
 
@@ -828,9 +1243,9 @@ transactionsList.addEventListener(
     async function (event) {
 
 
-        // ====================================
+        // =================================
         // EDIT
-        // ====================================
+        // =================================
 
         if (
             event.target.classList.contains(
@@ -854,9 +1269,9 @@ transactionsList.addEventListener(
         }
 
 
-        // ====================================
+        // =================================
         // DELETE
-        // ====================================
+        // =================================
 
         if (
             event.target.classList.contains(
@@ -865,7 +1280,9 @@ transactionsList.addEventListener(
         ) {
 
             const transactionId =
-                event.target.dataset.id;
+                Number(
+                    event.target.dataset.id
+                );
 
 
             const confirmed =
@@ -885,7 +1302,9 @@ transactionsList.addEventListener(
 
                 const response =
                     await fetch(
-                        `${API_URL}/transactions/${transactionId}`,
+                        `${API_URL}/transactions/${
+                            transactionId
+                        }`,
                         {
                             method: "DELETE"
                         }
@@ -916,7 +1335,7 @@ transactionsList.addEventListener(
                 );
 
 
-                await loadTransactions();
+                await refreshDashboard();
 
 
             } catch (error) {
@@ -927,7 +1346,9 @@ transactionsList.addEventListener(
                 );
 
 
-                alert(error.message);
+                alert(
+                    error.message
+                );
 
             }
 
@@ -938,7 +1359,7 @@ transactionsList.addEventListener(
 
 
 // ========================================
-// Start Editing
+// Start Edit
 // ========================================
 
 async function startEditTransaction(
@@ -949,7 +1370,9 @@ async function startEditTransaction(
 
         const response =
             await fetch(
-                `${API_URL}/transactions/${transactionId}`
+                `${API_URL}/transactions/${
+                    transactionId
+                }`
             );
 
 
@@ -990,7 +1413,8 @@ async function startEditTransaction(
 
 
         descriptionInput.value =
-            transaction.description || "";
+            transaction.description ||
+            "";
 
 
         editingTransactionId =
@@ -1027,7 +1451,9 @@ async function startEditTransaction(
         );
 
 
-        alert(error.message);
+        alert(
+            error.message
+        );
 
     }
 
@@ -1080,24 +1506,30 @@ function resetForm() {
 
 
 // ========================================
-// Clear Search / Filters
+// Clear Filters
 // ========================================
 
 clearFiltersButton.addEventListener(
     "click",
     function () {
 
-        searchInput.value = "";
+        searchInput.value =
+            "";
 
-        typeFilter.value = "all";
+        typeFilter.value =
+            "all";
 
-        categoryFilter.value = "all";
+        categoryFilter.value =
+            "all";
 
-        startDateInput.value = "";
+        startDateInput.value =
+            "";
 
-        endDateInput.value = "";
+        endDateInput.value =
+            "";
 
-        sortFilter.value = "newest";
+        sortFilter.value =
+            "newest";
 
 
         applyFilters();
@@ -1107,7 +1539,7 @@ clearFiltersButton.addEventListener(
 
 
 // ========================================
-// Filter Event Listeners
+// Search / Filter Events
 // ========================================
 
 searchInput.addEventListener(
@@ -1147,6 +1579,21 @@ sortFilter.addEventListener(
 
 
 // ========================================
+// Refresh Entire Dashboard
+// ========================================
+
+async function refreshDashboard() {
+
+    await loadTransactions();
+
+    await loadSummary();
+
+    await loadCategoryAnalytics();
+
+}
+
+
+// ========================================
 // Convert Date
 // ========================================
 
@@ -1154,7 +1601,17 @@ function convertToInputDate(
     dateString
 ) {
 
-    // YYYY-MM-DD
+    if (
+        !dateString
+    ) {
+
+        return "";
+
+    }
+
+
+    // Already YYYY-MM-DD
+
     if (
         /^\d{4}-\d{2}-\d{2}$/.test(
             dateString
@@ -1166,18 +1623,29 @@ function convertToInputDate(
     }
 
 
-    // DD/MM/YYYY
+    // Convert DD/MM/YYYY
+
     const parts =
         dateString.split("/");
 
 
-    if (parts.length === 3) {
+    if (
+        parts.length === 3
+    ) {
 
         const day =
-            parts[0].padStart(2, "0");
+            parts[0].padStart(
+                2,
+                "0"
+            );
+
 
         const month =
-            parts[1].padStart(2, "0");
+            parts[1].padStart(
+                2,
+                "0"
+            );
+
 
         const year =
             parts[2];
@@ -1194,7 +1662,7 @@ function convertToInputDate(
 
 
 // ========================================
-// Currency
+// Currency Formatting
 // ========================================
 
 function formatCurrency(
@@ -1204,13 +1672,19 @@ function formatCurrency(
     return new Intl.NumberFormat(
         "en-IN",
         {
+
             style: "currency",
 
             currency: "INR",
 
+            minimumFractionDigits: 2,
+
             maximumFractionDigits: 2
+
         }
-    ).format(amount);
+    ).format(
+        Number(amount)
+    );
 
 }
 
@@ -1223,6 +1697,13 @@ function capitalize(
     text
 ) {
 
+    if (!text) {
+
+        return "";
+
+    }
+
+
     return (
         text.charAt(0).toUpperCase() +
         text.slice(1)
@@ -1232,30 +1713,8 @@ function capitalize(
 
 
 // ========================================
-// HTML Escaping
-// ========================================
-
-function escapeHTML(
-    value
-) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        value;
-
-
-    return div.innerHTML;
-
-}
-
-
-// ========================================
 // Start Application
 // ========================================
 
-loadTransactions();
+
+refreshDashboard();

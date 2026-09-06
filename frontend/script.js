@@ -328,448 +328,389 @@ let incomeExpenseChartInstance = null;
 let monthlyExpenseChartInstance = null;
 
 
-async function loadCategoryAnalytics() {
+// ========================================
+// Update Category Chart
+// ========================================
 
-    try {
+function updateCategoryChart(transactions) {
 
-        const response =
-            await fetch(
-                `${API_URL}/analytics/categories`
-            );
+    const categoryExpenses = {};
 
+    for (const transaction of transactions) {
 
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to load category analytics."
-            );
-
+        if (transaction.type !== "expense") {
+            continue;
         }
 
+        const category =
+            transaction.category || "Other";
 
-        const categories =
-            await response.json();
-
-
-        const entries =
-            Object.entries(
-                categories
-            );
-
-
-        if (entries.length === 0) {
-
-            return;
-
+        if (!categoryExpenses[category]) {
+            categoryExpenses[category] = 0;
         }
 
-
-        const labels =
-            entries.map(
-                entry => entry[0]
-            );
+        categoryExpenses[category] +=
+            Number(transaction.amount);
+    }
 
 
-        const values =
-            entries.map(
-                entry => Number(entry[1])
-            );
+    const entries =
+        Object.entries(categoryExpenses);
 
 
-        // Destroy old chart before creating
-        // a new one
+    if (categoryChartInstance) {
 
-        if (
-            categoryChartInstance
-        ) {
+        categoryChartInstance.destroy();
 
-            categoryChartInstance.destroy();
-
-        }
+        categoryChartInstance = null;
+    }
 
 
-        categoryChartInstance =
-            new Chart(
-                categoryChart,
-                {
+    if (entries.length === 0) {
+        return;
+    }
 
-                    type: "doughnut",
 
-                    data: {
+    entries.sort(
+        (a, b) =>
+            Number(b[1]) - Number(a[1])
+    );
 
-                        labels: labels,
 
-                        datasets: [
+    const labels =
+        entries.map(
+            entry => entry[0]
+        );
 
-                            {
 
-                                label:
-                                    "Expenses",
+    const values =
+        entries.map(
+            entry => Number(entry[1])
+        );
 
-                                data: values
 
-                            }
+    categoryChartInstance =
+        new Chart(
+            categoryChart,
+            {
 
-                        ]
+                type: "doughnut",
 
-                    },
+                data: {
 
-                    options: {
+                    labels: labels,
 
-                        responsive: true,
+                    datasets: [
 
-                        maintainAspectRatio: false,
+                        {
 
-                        plugins: {
+                            label: "Expenses",
 
-                            legend: {
-
-                                position:
-                                    "bottom"
-
-                            }
+                            data: values
 
                         }
 
-                    }
-
-                }
-            );
-
-
-    } catch (error) {
-
-        console.error(
-            "Error loading category analytics:",
-            error
-        );
-
-    }
-
-}
-
-
-// ========================================
-// Load Income vs Expenses Chart
-// ========================================
-
-async function loadIncomeExpenseChart() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/summary`
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to load income and expense data."
-            );
-
-        }
-
-
-        const summary =
-            await response.json();
-
-
-        // Destroy previous chart
-
-        if (
-            incomeExpenseChartInstance
-        ) {
-
-            incomeExpenseChartInstance.destroy();
-
-        }
-
-
-        // Create new chart
-
-        incomeExpenseChartInstance =
-            new Chart(
-                incomeExpenseChart,
-                {
-
-                    type: "bar",
-
-                    data: {
-
-                        labels: [
-                            "Income",
-                            "Expenses"
-                        ],
-
-                        datasets: [
-
-                            {
-
-                                label:
-                                    "Amount",
-
-                                data: [
-                                    Number(
-                                        summary.income
-                                    ),
-
-                                    Number(
-                                        summary.expenses
-                                    )
-                                ]
-
-                            }
-
-                        ]
-
-                    },
-
-                    options: {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        scales: {
-
-                            y: {
-
-                                beginAtZero:
-                                    true,
-
-                                ticks: {
-
-                                    callback:
-                                        function(value) {
-
-                                            return formatCurrency(
-                                                value
-                                            );
-
-                                        }
-
-                                }
-
-                            }
-
-                        },
-
-                        plugins: {
-
-                            legend: {
-
-                                display: false
-
-                            }
-
-                        }
-
-                    }
-
-                }
-            );
-
-
-    } catch (error) {
-
-        console.error(
-            "Error loading income vs expenses chart:",
-            error
-        );
-
-    }
-
-}
-
-
-// ========================================
-// Load Monthly Expenses Chart
-// ========================================
-
-async function loadMonthlyExpenseChart() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/transactions`
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to load transactions."
-            );
-
-        }
-
-
-        const transactions =
-            await response.json();
-
-
-        const monthlyExpenses = {};
-
-
-        for (
-            const transaction
-            of transactions
-        ) {
-
-            if (
-                transaction.type !==
-                "expense"
-            ) {
-
-                continue;
-
-            }
-
-
-            const date =
-                convertToInputDate(
-                    transaction.date
-                );
-
-
-            if (!date) {
-
-                continue;
-
-            }
-
-
-            // YYYY-MM
-
-            const month =
-                date.substring(
-                    0,
-                    7
-                );
-
-
-            if (
-                !monthlyExpenses[month]
-            ) {
-
-                monthlyExpenses[month] =
-                    0;
-
-            }
-
-
-            monthlyExpenses[month] +=
-                Number(
-                    transaction.amount
-                );
-
-        }
-
-
-        const months =
-            Object.keys(
-                monthlyExpenses
-            ).sort();
-
-
-        const values =
-            months.map(
-                month =>
-                    monthlyExpenses[
-                        month
                     ]
-            );
 
+                },
 
-        const labels =
-            months.map(
-                month =>
-                    formatMonth(month)
-            );
+                options: {
 
+                    responsive: true,
 
-        if (
-            monthlyExpenseChartInstance
-        ) {
+                    maintainAspectRatio: false,
 
-            monthlyExpenseChartInstance.destroy();
+                    plugins: {
 
-        }
+                        legend: {
 
-
-        monthlyExpenseChartInstance =
-            new Chart(
-                monthlyExpenseChart,
-                {
-
-                    type: "bar",
-
-                    data: {
-
-                        labels: labels,
-
-                        datasets: [
-
-                            {
-
-                                label:
-                                    "Expenses",
-
-                                data: values
-
-                            }
-
-                        ]
-
-                    },
-
-                    options: {
-
-                        responsive: true,
-
-                        maintainAspectRatio: false,
-
-                        scales: {
-
-                            y: {
-
-                                beginAtZero:
-                                    true,
-
-                                ticks: {
-
-                                    callback:
-                                        function(value) {
-
-                                            return formatCurrency(
-                                                value
-                                            );
-
-                                        }
-
-                                }
-
-                            }
+                            position: "bottom"
 
                         }
 
                     }
 
                 }
+
+            }
+        );
+
+}
+
+
+// ========================================
+// Update Income vs Expenses Chart
+// ========================================
+
+function updateIncomeExpenseChart(transactions) {
+
+    let income = 0;
+    let expenses = 0;
+
+
+    for (const transaction of transactions) {
+
+        if (transaction.type === "income") {
+
+            income += Number(
+                transaction.amount
+            );
+
+        }
+
+
+        if (transaction.type === "expense") {
+
+            expenses += Number(
+                transaction.amount
+            );
+
+        }
+
+    }
+
+
+    if (incomeExpenseChartInstance) {
+
+        incomeExpenseChartInstance.destroy();
+
+        incomeExpenseChartInstance = null;
+
+    }
+
+
+    incomeExpenseChartInstance =
+        new Chart(
+            incomeExpenseChart,
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        "Income",
+                        "Expenses"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Amount",
+
+                            data: [
+                                income,
+                                expenses
+                            ]
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                callback:
+                                    function(value) {
+
+                                        return formatCurrency(
+                                            value
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+}
+
+
+/// ========================================
+// Update Monthly Expenses Chart
+// ========================================
+
+function updateMonthlyExpenseChart(transactions) {
+
+    const monthlyExpenses = {};
+
+
+    for (const transaction of transactions) {
+
+        // Only expenses
+        if (transaction.type !== "expense") {
+            continue;
+        }
+
+
+        const date =
+            convertToInputDate(
+                transaction.date
             );
 
 
-    } catch (error) {
+        if (!date) {
+            continue;
+        }
 
-        console.error(
-            "Error loading monthly expenses chart:",
-            error
-        );
+
+        // Get YYYY-MM
+        const month =
+            date.substring(0, 7);
+
+
+        if (!monthlyExpenses[month]) {
+
+            monthlyExpenses[month] = 0;
+
+        }
+
+
+        monthlyExpenses[month] +=
+            Number(transaction.amount);
 
     }
+
+
+    const months =
+        Object.keys(
+            monthlyExpenses
+        ).sort();
+
+
+    const values =
+        months.map(
+            month =>
+                monthlyExpenses[month]
+        );
+
+
+    const labels =
+        months.map(
+            month =>
+                formatMonth(month)
+        );
+
+
+    // Remove previous chart
+
+    if (monthlyExpenseChartInstance) {
+
+        monthlyExpenseChartInstance.destroy();
+
+        monthlyExpenseChartInstance = null;
+
+    }
+
+
+    // No expense data
+
+    if (months.length === 0) {
+        return;
+    }
+
+
+    // Create chart
+
+    monthlyExpenseChartInstance =
+        new Chart(
+            monthlyExpenseChart,
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: labels,
+
+                    datasets: [
+
+                        {
+
+                            label: "Expenses",
+
+                            data: values
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            ticks: {
+
+                                callback:
+                                    function(value) {
+
+                                        return formatCurrency(
+                                            value
+                                        );
+
+                                    }
+
+                            }
+
+                        }
+
+                    },
+
+                    plugins: {
+
+                        legend: {
+
+                            display: true
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
 
 }
 
@@ -1103,16 +1044,22 @@ function applyFilters() {
     // Sorting
     // ====================================
 
-    sortTransactions(
+    displayTransactions(
         filteredTransactions
     );
 
 
-    // ====================================
-    // Display
-    // ====================================
+    updateCategoryChart(
+        filteredTransactions
+    );
 
-    displayTransactions(
+
+    updateIncomeExpenseChart(
+        filteredTransactions
+    );
+
+
+    updateMonthlyExpenseChart(
         filteredTransactions
     );
 
@@ -1974,12 +1921,6 @@ async function refreshDashboard() {
     await loadTransactions();
 
     await loadSummary();
-
-    await loadCategoryAnalytics();
-
-    await loadIncomeExpenseChart();
-
-    await loadMonthlyExpenseChart();
 
 }
 

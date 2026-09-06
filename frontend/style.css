@@ -383,12 +383,16 @@ body {
 /* Analytics */
 /* ================================= */
 
-.category-list {
-    display: flex;
+.chart-container {
+    position: relative;
 
-    flex-wrap: wrap;
+    width: 100%;
 
-    gap: 15px;
+    max-width: 500px;
+
+    height: 350px;
+
+    margin: 0 auto;
 }
 
 

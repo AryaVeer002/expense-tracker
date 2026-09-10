@@ -385,14 +385,10 @@ body {
 
 .chart-container {
     position: relative;
-
     width: 100%;
-
-    max-width: 500px;
-
+    max-width: 600px;
     height: 350px;
-
-    margin: 0 auto;
+    margin: 20px auto 10px;
 }
 
 
@@ -605,6 +601,31 @@ tbody tr:hover {
     color: #dc2626;
 }
 
+/* ================================= */
+/* Empty State */
+/* ================================= */
+
+.empty-state {
+    padding: 25px 10px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.empty-state h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: #374151;
+}
+
+.empty-state p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+}
 
 
 /* ================================= */
@@ -698,4 +719,379 @@ tbody tr:hover {
         flex-direction: column;
     }
 
+}
+
+/* ================================= */
+/* Loading State */
+/* ================================= */
+
+.loading-state {
+    padding: 30px 10px;
+    text-align: center;
+}
+
+.loading-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.loading-state p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* ================================= */
+/* Error State */
+/* ================================= */
+
+.error-state {
+    padding: 30px 10px;
+    text-align: center;
+}
+
+.error-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.error-state h3 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: #374151;
+}
+
+.error-state p {
+    margin: 0 0 15px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.retry-button {
+    border: none;
+    border-radius: 5px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* ================================= */
+/* Toast Notifications */
+/* ================================= */
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+.toast {
+    min-width: 240px;
+    max-width: 350px;
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.12);
+
+    font-size: 13px;
+
+    pointer-events: auto;
+
+    animation:
+        toast-slide-in 0.25s ease;
+}
+
+.toast-success {
+    border-left: 4px solid #16a34a;
+}
+
+.toast-error {
+    border-left: 4px solid #dc2626;
+}
+
+.toast-info {
+    border-left: 4px solid #2563eb;
+}
+
+.toast-warning {
+    border-left: 4px solid #d97706;
+}
+
+@keyframes toast-slide-in {
+
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ================================= */
+/* Summary Card Details */
+/* ================================= */
+
+.card small {
+    display: block;
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 11px;
+}
+
+/* ================================= */
+/* Chart Container */
+/* ================================= */
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 350px;
+    margin: 20px auto 10px;
+}
+
+
+/* ================================= */
+/* Chart Empty State */
+/* ================================= */
+
+.chart-empty-state {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: #6b7280;
+}
+
+
+/* Hide empty state when not needed */
+
+.chart-empty-state[hidden] {
+    display: none !important;
+}
+
+
+/* Empty state icon */
+
+.chart-empty-icon {
+    font-size: 32px;
+
+    margin-bottom: 10px;
+}
+
+
+/* Empty state heading */
+
+.chart-empty-state h3 {
+    margin: 0 0 6px;
+
+    font-size: 15px;
+
+    color: #374151;
+}
+
+
+/* Empty state description */
+
+.chart-empty-state p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: #6b7280;
+}
+
+/* ================================= */
+/* Transaction Table Polish */
+/* ================================= */
+
+#transactions-list tr {
+    transition: background-color 0.15s ease;
+}
+
+#transactions-list tr:hover {
+    background-color: #f9fafb;
+}
+
+
+/* ================================= */
+/* Transaction Type Badges */
+/* ================================= */
+
+.type-badge {
+    display: inline-block;
+
+    padding: 4px 9px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-transform: capitalize;
+}
+
+.type-badge.expense {
+    background-color: #fee2e2;
+
+    color: #b91c1c;
+}
+
+.type-badge.income {
+    background-color: #dcfce7;
+
+    color: #15803d;
+}
+
+
+/* ================================= */
+/* Transaction Amount */
+/* ================================= */
+
+#transactions-list td:nth-child(5) {
+    font-weight: 600;
+}
+
+
+/* ================================= */
+/* Action Buttons */
+/* ================================= */
+
+.edit-button,
+.delete-button {
+    border: none;
+
+    padding: 4px 8px;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    margin-right: 4px;
+}
+
+.edit-button {
+    background-color: #e0e7ff;
+
+    color: #3730a3;
+}
+
+.edit-button:hover {
+    background-color: #c7d2fe;
+}
+
+.delete-button {
+    background-color: #fee2e2;
+
+    color: #b91c1c;
+}
+
+.delete-button:hover {
+    background-color: #fecaca;
+}
+
+
+
+/* ================================= */
+/* Small Phones */
+/* ================================= */
+
+@media (max-width: 480px) {
+
+    .container {
+        width: 92%;
+    }
+
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+
+    .header p {
+        font-size: 12px;
+    }
+
+
+    .section {
+        padding: 14px;
+    }
+
+
+    .card {
+        padding: 12px;
+    }
+
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+
+    .card h3 {
+        font-size: 11px;
+    }
+
+
+    .card p {
+        font-size: 17px;
+    }
+
+
+    .chart-container {
+        height: 280px;
+    }
+
+
+    .action-buttons {
+        gap: 6px;
+    }
+
+
+    .action-buttons button {
+        width: 100%;
+    }
+
+}
+
+.editing-row {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+    font-weight: 600;
 }

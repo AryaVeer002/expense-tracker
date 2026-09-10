@@ -87,6 +87,10 @@
                         ₹0.00
                     </p>
 
+                    <small>
+                        Available balance
+                    </small>
+
                 </div>
 
             </div>
@@ -109,6 +113,10 @@
                     <p id="income">
                         ₹0.00
                     </p>
+                    
+                    <small>
+                        Total income
+                    </small>
 
                 </div>
 
@@ -133,6 +141,10 @@
                         ₹0.00
                     </p>
 
+                    <small>
+                        Total spending
+                    </small>
+
                 </div>
 
             </div>
@@ -155,6 +167,10 @@
                     <p id="transaction-count-value">
                         0
                     </p>
+                    
+                    <small>
+                        Total records
+                    </small>
 
                 </div>
 
@@ -512,10 +528,14 @@
 
         </div>
 
-        <div class="chart-container">
-
+        <div class="chart-container" id="category-chart-container">
             <canvas id="category-chart"></canvas>
 
+            <div id="category-chart-empty" class="chart-empty-state" hidden>
+                <div class="chart-empty-icon">📊</div>
+                <p>No expense data available</p>
+                <small>Try changing your filters.</small>
+            </div>
         </div>
 
     </section>
@@ -535,10 +555,14 @@
 
         </div>
 
-        <div class="chart-container">
-
+        <div class="chart-container" id="income-expense-chart-container">
             <canvas id="income-expense-chart"></canvas>
 
+            <div id="income-expense-chart-empty" class="chart-empty-state" hidden>
+                <div class="chart-empty-icon">📊</div>
+                <p>No income or expense data available</p>
+                <small>Try changing your filters.</small>
+            </div>
         </div>
 
     </section>
@@ -559,11 +583,15 @@
 
         </div>
 
-        <div class="chart-container">
-
+        <div class="chart-container" id="monthly-expense-chart-container">
             <canvas id="monthly-expense-chart"></canvas>
 
-    </div>
+            <div id="monthly-expense-chart-empty" class="chart-empty-state" hidden>
+                <div class="chart-empty-icon">📅</div>
+                <p>No monthly expense data available</p>
+                <small>Try changing your filters.</small>
+            </div>
+        </div>
 
 </section>
 
@@ -667,6 +695,13 @@
 
 </footer>
 
+
+<div
+    id="toast-container"
+    class="toast-container"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="script.js"></script>

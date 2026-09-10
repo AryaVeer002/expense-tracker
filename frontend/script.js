@@ -105,6 +105,25 @@ const expensesElement =
 const transactionCountValue =
     document.getElementById("transaction-count-value");
 
+const categoryChartEmptyMessage =
+    document.getElementById(
+        "category-chart-empty-message"
+    );
+
+const incomeExpenseChartEmptyMessage =
+    document.getElementById(
+        "income-expense-chart-empty-message"
+    );
+
+const monthlyExpenseChartEmptyMessage =
+    document.getElementById(
+        "monthly-expense-chart-empty-message"
+    );
+
+const summaryDescription =
+    document.getElementById("summary-description");
+
+
 
 // ========================================
 // Toast Notifications
@@ -889,12 +908,59 @@ function displayTransactions(
     }
 }
 
+function updateFilteredSummary(transactions) {
+    let income = 0;
+    let expenses = 0;
+
+    for (const transaction of transactions) {
+        const amount = Number(transaction.amount) || 0;
+
+        if (transaction.type === "income") {
+            income += amount;
+        } else if (transaction.type === "expense") {
+            expenses += amount;
+        }
+    }
+
+    const balance = income - expenses;
+
+    balanceElement.textContent =
+        formatCurrency(balance);
+
+    incomeElement.textContent =
+        formatCurrency(income);
+
+    expensesElement.textContent =
+        formatCurrency(expenses);
+
+    transactionCountValue.textContent =
+        transactions.length;
+}
+
+function updateSummaryDescription() {
+    const hasActiveFilters =
+        searchInput.value.trim() !== "" ||
+        typeFilter.value !== "" ||
+        categoryFilter.value !== "" ||
+        startDateInput.value !== "" ||
+        endDateInput.value !== "";
+
+    if (hasActiveFilters) {
+        summaryDescription.textContent =
+            "Showing filtered results";
+    } else {
+        summaryDescription.textContent =
+            "Your current financial summary";
+    }
+}
 
 // ========================================
 // Apply Filters
 // ========================================
 
 function applyFilters() {
+
+    updateSummaryDescription();
 
     // Start with all transactions
     let filteredTransactions = [...allTransactions];
@@ -1167,11 +1233,13 @@ function applyFilters() {
         filteredTransactions
     );
 
+    updateFilteredSummary(
+        filteredTransactions
+    );
 
     updateCategoryChart(
         filteredTransactions
     );
-
 
     updateIncomeExpenseChart(
         filteredTransactions
@@ -1252,6 +1320,21 @@ function updateCategoryChart(
         entries.length === 0
     ) {
 
+        const hasActiveFilters =
+            searchInput.value.trim() !== "" ||
+            typeFilter.value !== "" ||
+            categoryFilter.value !== "" ||
+            startDateInput.value !== "" ||
+            endDateInput.value !== "";
+
+        if (hasActiveFilters) {
+            categoryChartEmptyMessage.textContent =
+                "No matching expense data";
+        } else {
+            categoryChartEmptyMessage.textContent =
+                "No expense data available";
+        }
+
         setChartEmptyState(
             "category-chart",
             "category-chart-empty",
@@ -1323,11 +1406,16 @@ function updateCategoryChart(
                     maintainAspectRatio: false,
 
                     plugins: {
-
                         legend: {
+                            position: "bottom"
+                        },
 
-                            position:
-                                "bottom"
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${formatCurrency(context.parsed)}`;
+                                }
+                            }
                         }
                     }
                 }
@@ -1460,10 +1548,18 @@ function updateIncomeExpenseChart(
 
                     maintainAspectRatio: false,
 
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+
                     scales: {
-
                         y: {
-
                             beginAtZero: true
                         }
                     }
@@ -1503,6 +1599,26 @@ function updateMonthlyExpenseChart(
 
             monthlyExpenseChartInstance =
                 null;
+        }
+
+
+        const hasActiveFilters =
+            searchInput.value.trim() !== "" ||
+            typeFilter.value !== "" ||
+            categoryFilter.value !== "" ||
+            startDateInput.value !== "" ||
+            endDateInput.value !== "";
+
+
+        if (hasActiveFilters) {
+
+            monthlyExpenseChartEmptyMessage.textContent =
+                "No matching expense data";
+
+        } else {
+
+            monthlyExpenseChartEmptyMessage.textContent =
+                "No monthly expense data available";
         }
 
 
@@ -1660,10 +1776,18 @@ function updateMonthlyExpenseChart(
 
                     maintainAspectRatio: false,
 
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+
                     scales: {
-
                         y: {
-
                             beginAtZero: true
                         }
                     }
@@ -1809,10 +1933,6 @@ function startEditTransaction(
     descriptionInput.value =
         transaction.description ||
         "";
-
-
-    formTitle.textContent =
-        "Edit Transaction";
 
 
     formTitle.textContent =

@@ -59,7 +59,7 @@
                 Financial Overview
             </h2>
 
-            <p>
+            <p id="summary-description">
                 Your current financial summary
             </p>
 
@@ -533,8 +533,14 @@
 
             <div id="category-chart-empty" class="chart-empty-state" hidden>
                 <div class="chart-empty-icon">📊</div>
-                <p>No expense data available</p>
-                <small>Try changing your filters.</small>
+
+                <p id="category-chart-empty-message">
+                    No expense data available
+                </p>
+
+                <small>
+                    Try changing your filters.
+                </small>
             </div>
         </div>
 
@@ -560,8 +566,14 @@
 
             <div id="income-expense-chart-empty" class="chart-empty-state" hidden>
                 <div class="chart-empty-icon">📊</div>
-                <p>No income or expense data available</p>
-                <small>Try changing your filters.</small>
+
+                <p id="income-expense-chart-empty-message">
+                    No income or expense data available
+                </p>
+
+                <small>
+                    Try changing your filters.
+                </small>
             </div>
         </div>
 
@@ -571,27 +583,39 @@
 
     <section class="section">
 
-        <div class="section-header">
+    <div class="section-header">
 
-            <h2>
-                Monthly Expenses
-            </h2>
+        <h2>
+            Monthly Expenses
+        </h2>
 
-            <p>
-                Track your spending month by month.
+        <p>
+            Track your spending month by month.
+        </p>
+
+    </div>
+
+    <div class="chart-container" id="monthly-expense-chart-container">
+
+        <canvas id="monthly-expense-chart"></canvas>
+
+        <div
+            id="monthly-expense-chart-empty"
+            class="chart-empty-state"
+            hidden
+        >
+            <div class="chart-empty-icon">📅</div>
+
+            <p id="monthly-expense-chart-empty-message">
+                No monthly expense data available
             </p>
 
+            <small>
+                Try changing your filters.
+            </small>
         </div>
 
-        <div class="chart-container" id="monthly-expense-chart-container">
-            <canvas id="monthly-expense-chart"></canvas>
-
-            <div id="monthly-expense-chart-empty" class="chart-empty-state" hidden>
-                <div class="chart-empty-icon">📅</div>
-                <p>No monthly expense data available</p>
-                <small>Try changing your filters.</small>
-            </div>
-        </div>
+    </div>
 
 </section>
 

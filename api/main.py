@@ -52,10 +52,21 @@ class TransactionUpdateRequest(BaseModel):
     @field_validator("date")
     @classmethod
     def validate_date_format(cls, value):
-        for date_format in ("%Y-%m-%d"):
+
+        for date_format in (
+            "%Y-%m-%d",
+            "%d/%m/%Y"
+        ):
             try:
-                parsed_date = datetime.strptime(value, date_format)
-                return parsed_date.strftime("%Y-%m-%d")
+                parsed_date = datetime.strptime(
+                    value,
+                    date_format
+                )
+
+                return parsed_date.strftime(
+                    "%Y-%m-%d"
+                )
+
             except ValueError:
                 continue
 
